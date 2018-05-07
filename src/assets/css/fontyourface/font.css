@@ -1,0 +1,4 @@
+body { font-family: 'Lato'; font-style: normal; font-weight: 300; }
+b, strong { font-family: 'Lato'; font-style: normal; font-weight: 700; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Roboto Slab'; font-style: normal; font-weight: 300; }
+h1 b, h2 b, h3 b, h4 b, h5 b, h6 b, h1 strong, h2 strong, h3 strong, h4 strong, h5 strong, h6 strong { font-family: 'Roboto Slab'; font-style: normal; font-weight: 700; }

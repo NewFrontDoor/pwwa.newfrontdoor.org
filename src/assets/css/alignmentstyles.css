@@ -1,0 +1,8 @@
+img.alignleft, table.alignleft { clear: left; float: left; margin-right:20px; }
+img.alignright, table.alignright { clear:right; float: right; margin-left: 20px; }
+img.aligncenter { display:block; }
+img.aligncenter, table.aligncenter { margin-left: auto; margin-right: auto; }
+.alignfull { text-align: justify; }
+p.alignleft, h1.alignleft, h2.alignleft, h3.alignleft, h4.alignleft, h5.alignleft, h6.alignleft, td.alignleft, th.alignleft, div.alignleft, ul.alignleft, ol.alignleft, li.alignleft { text-align: left; }
+p.alignright, h1.alignright, h2.alignright, h3.alignright, h4.alignright, h5.alignright, h6.alignright, td.alignright, th.alignright, div.alignright, ul.alignright, ol.alignright, li.alignright { text-align: left; }
+p.aligncenter, h1.aligncenter, h2.aligncenter, h3.aligncenter, h4.aligncenter, h5.aligncenter, h6.aligncenter, td.aligncenter, th.aligncenter, div.aligncenter, ul.aligncenter, ol.aligncenter, li.aligncenter { text-align: left; }
