@@ -9,7 +9,7 @@ import {Table} from 'react-bootstrap';
 import PaypalConfirmation from './confirmations/Paypal';
 import ChequeDDConfirmation from './confirmations/ChequeDD';
 
-//import {postToWebform} from '../../fetchJSON.js';
+import {postToWebform} from './postToAPI.js';
 
 const fullWeekendEarlyPrice = 130;
 const fullWeekendPrice = 140;
@@ -38,7 +38,7 @@ class RegistrationForm extends Component {
                   formValid: false,
                   formSubmitted: false,
                   registrationType: "full",
-                  paymentType: "paypal",
+                  paymentType: "cheque",
                   totalCost: 0,
                   friday: false,
                   fridayDinner: false,
@@ -47,7 +47,8 @@ class RegistrationForm extends Component {
                   saturdayLunch: false,
                   saturdayDinner: false,
                   sundayBreakfast: false,
-                  sundayLunch: false}
+                  sundayLunch: false,
+                  weekendDinnerAttendance: 'yes'}
 
     this.resetRegistrationForm = this.resetRegistrationForm.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -69,7 +70,7 @@ class RegistrationForm extends Component {
                   formValid: false,
                   formSubmitted: false,
                   registrationType: "full",
-                  paymentType: "paypal",
+                  paymentType: "cheque",
                   totalCost: 0,
                   friday: false,
                   fridayDinner: false,
@@ -78,14 +79,8 @@ class RegistrationForm extends Component {
                   saturdayLunch: false,
                   saturdayDinner: false,
                   sundayBreakfast: false,
-                  sundayLunch: false})
-  }
-
-  toggleCheckbox(e){
-    var change = {};
-    change[e.target.name] = e.target.checked;
-    this.setState(change);
-    console.log(this.state);
+                  sundayLunch: false,
+                  weekendDinnerAttendance: 'yes'})
   }
 
   handleChange(e) {
@@ -128,7 +123,7 @@ class RegistrationForm extends Component {
     }
     if(validator.isEmpty(this.state.state))
     {
-      errorMessage += "Please enter your state.\n";
+      errorMessage += "Please select your state.\n";
     }
     if(validator.isEmpty(this.state.postcode))
     {
@@ -171,21 +166,108 @@ class RegistrationForm extends Component {
       }
       this.setState({totalCost:totalCost});
       this.setState({formValid:true});
-      this.setState({formSubmitted:true});
       console.log(this.state);
-      /*handle posting to drupal and show success message
+      /*handle posting to drupal and show success message*/
       var form = new FormData();
-      form.append("webform", "8534998e-a5f0-4375-8586-6c479a456f1e");
-      form.append("submission[data][1][values][0]", escape(this.state.name));
-      form.append("submission[data][2][values][0]", escape(this.state.email));
-      form.append("submission[data][3][values][0]", escape(this.state.phone));
-      form.append("submission[data][24][values][0]", escape(this.state.allergies));
-      form.append("submission[data][25][values][0]", escape(this.state.comments));
+      form.append("webform", "8e070048-9aaf-4371-a0de-35bb5c3d28e6");
+      form.append("submission[data][1][values][0]", escape(this.state.firstName));
+      form.append("submission[data][2][values][0]", escape(this.state.lastName));
+      form.append("submission[data][3][values][0]", escape(this.state.email));
+      form.append("submission[data][4][values][0]", escape(this.state.phone));
+      form.append("submission[data][5][values][0]", escape(this.state.address));
+      form.append("submission[data][6][values][0]", escape(this.state.suburb));
+      form.append("submission[data][7][values][0]", escape(this.state.state));
+      form.append("submission[data][8][values][0]", escape(this.state.postcode));
+      form.append("submission[data][9][values][0]", escape(this.state.registrationType));
+
+
+
+      if(this.state.registrationType === 'full'){
+        form.append("submission[data][10][values][0]", escape(this.state.weekendDinnerAttendance));
+        form.append("submission[data][11][values][0]", 'friday');
+        form.append("submission[data][11][values][1]", 'saturday');
+        form.append("submission[data][11][values][2]", 'sunday');
+
+        if(this.state.weekendDinnerAttendance)
+        {
+          form.append("submission[data][12][values][0]", 'fridayDinner');
+          form.append("submission[data][12][values][1]", 'saturdayBreakfast');
+          form.append("submission[data][12][values][2]", 'saturdayLunch');
+          form.append("submission[data][12][values][3]", 'saturdayDinner');
+          form.append("submission[data][12][values][4]", 'sundayBreakfast');
+          form.append("submission[data][12][values][5]", 'sundayLunch');
+        }
+        else{
+          form.append("submission[data][12][values][0]", 'saturdayBreakfast');
+          form.append("submission[data][12][values][1]", 'saturdayLunch');
+          form.append("submission[data][12][values][2]", 'saturdayDinner');
+          form.append("submission[data][12][values][3]", 'sundayBreakfast');
+          form.append("submission[data][12][values][4]", 'sundayLunch');
+        }
+
+
+      }
+      else{
+        let i = 0;
+        if(this.state.friday)
+        {
+          form.append("submission[data][11][values]["+i+"0]", 'friday');
+          i++;
+        }
+        if(this.state.saturday)
+        {
+          form.append("submission[data][11][values]["+i+"0]", 'saturday');
+          i++;
+        }
+        if(this.state.friday)
+        {
+          form.append("submission[data][11][values]["+i+"0]", 'sunday');
+          i++;
+        }
+
+        let j = 0;
+        if(this.state.fridayDinner){
+          form.append("submission[data][12][values]["+j+"]", 'fridayDinner');
+          form.append("submission[data][10][values][0]", 'yes');
+          j++;
+        }
+        else{
+          form.append("submission[data][10][values][0]", 'no');
+        }
+        if(this.state.saturdayBreakfast){
+          form.append("submission[data][12][values]["+j+"]", 'saturdayBreakfast');
+          j++;
+        }
+        if(this.state.saturdayLunch){
+          form.append("submission[data][12][values]["+j+"]", 'saturdayLunch');
+          j++;
+        }
+        if(this.state.saturdayDinner){
+          form.append("submission[data][12][values]["+j+"]", 'saturdayDinner');
+          j++;
+        }
+        if(this.state.sundayBreakfast){
+          form.append("submission[data][12][values]["+j+"]", 'sundayBreakfast');
+          j++;
+        }
+        if(this.state.sundayLunch){
+          form.append("submission[data][12][values]["+j+"]", 'sundayLunch');
+          j++;
+        }
+      }
+
+      //form.append("submission[data][9][values][0]", escape(this.state.meals_required));
+
+      form.append("submission[data][13][values][0]", escape(this.state.paymentType));
+      form.append("submission[data][14][values][0]", escape(this.state.church));
+      form.append("submission[data][15][values][0]", escape(this.state.dietary));
+      form.append("submission[data][16][values][0]", escape(this.state.comments));
+      form.append("submission[data][17][values][0]", totalCost);
       var that = this;
       postToWebform(form, function(data){
         that.setState({submissionID:data.sid})
         that.setState({formSubmitted:true})
-      })*/
+      })
     }
 
   }
@@ -226,8 +308,20 @@ class RegistrationForm extends Component {
             <label>Suburb </label>{requiredField}
             <input className="form-control form-text required" type="text" name="suburb" size="60" maxLength="128" onChange={this.handleChange.bind(this)} value={this.state.suburb} />
 
-            <label>State </label>{requiredField}
+            {/*}<label>State </label>{requiredField}
             <input className="form-control form-text required" type="text" name="state" size="60" maxLength="128" onChange={this.handleChange.bind(this)} value={this.state.state} />
+*/}
+            <label>State</label>{requiredField}<br/>
+            <select name="state" value={this.state.state} onChange={this.handleChange.bind(this)}>
+            <option value="">----</option>
+              <option value="act">Australian Capital Territory</option>
+              <option value="nsw">New South Wales</option>
+              <option value="nt">Northern Territory</option>
+              <option value="qld">Queensland</option>
+              <option value="sa">South Australia</option>
+              <option value="tas">Tasmania</option>
+              <option value="wa">Western Australia</option>
+            </select><br /><br />
 
             <label>Postcode </label>{requiredField}
             <input className="form-control form-text" type="text" name="postcode" size="4" maxLength="4" onChange={this.handleChange.bind(this)} value={this.state.postcode} />
@@ -248,25 +342,25 @@ class RegistrationForm extends Component {
                 <label> No &nbsp;</label><input type="radio" name="weekendDinnerAttendance" value="no" onChange={this.handleChange.bind(this)} checked={this.state.weekendDinnerAttendance === "no"}/><br />
               </section>) : (
               <section><strong>Please select which days you will be attending:</strong><br />
-                <label><input type="checkbox" name="friday" value={this.state.friday} onChange={this.toggleCheckbox.bind(this)} /> &nbsp;Friday </label><br />
-                <label><input type="checkbox" name="saturday" value={this.state.saturday} onChange={this.toggleCheckbox.bind(this)} /> &nbsp;Saturday </label><br />
-                <label><input type="checkbox" name="sunday" value={this.state.sunday} onChange={this.toggleCheckbox.bind(this)}/> &nbsp;Sunday </label><br />
+                <label><input type="checkbox" name="friday" value={this.state.friday} onChange={this.handleChange.bind(this)} /> &nbsp;Friday </label><br />
+                <label><input type="checkbox" name="saturday" value={this.state.saturday} onChange={this.handleChange.bind(this)} /> &nbsp;Saturday </label><br />
+                <label><input type="checkbox" name="sunday" value={this.state.sunday} onChange={this.handleChange.bind(this)}/> &nbsp;Sunday </label><br />
                 <strong>Please select which meals will be required:</strong><br />
                 <strong>Friday</strong> <br/>
-                  <input type="checkbox" name="fridayDinner" value={this.state.fridayDinner} onChange={this.toggleCheckbox.bind(this)} />&nbsp;Dinner ($19)<br />
+                  <input type="checkbox" name="fridayDinner" value={this.state.fridayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Dinner ($19)<br />
                 <strong>Saturday</strong><br/>
-                  <input type="checkbox" name="saturdayBreakfast" value={this.state.fridayDinner} onChange={this.toggleCheckbox.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
-                  <input type="checkbox" name="saturdayLunch" value={this.state.saturdayLunch} onChange={this.toggleCheckbox.bind(this)}/>&nbsp;Lunch ($16)&nbsp;
-                  <input type="checkbox" name="saturdayDinner" value={this.state.saturdayDinner} onChange={this.toggleCheckbox.bind(this)}/>&nbsp;Dinner ($19)&nbsp;<br />
+                  <input type="checkbox" name="saturdayBreakfast" value={this.state.fridayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
+                  <input type="checkbox" name="saturdayLunch" value={this.state.saturdayLunch} onChange={this.handleChange.bind(this)}/>&nbsp;Lunch ($16)&nbsp;
+                  <input type="checkbox" name="saturdayDinner" value={this.state.saturdayDinner} onChange={this.handleChange.bind(this)}/>&nbsp;Dinner ($19)&nbsp;<br />
                 <strong>Sunday</strong><br/>
-                  <input type="checkbox" name="sundayBreakfast" value={this.state.saturdayDinner} onChange={this.toggleCheckbox.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
-                  <input type="checkbox" name="sundayLunch" value={this.state.sundayLunch} onChange={this.toggleCheckbox.bind(this)} />&nbsp;Lunch ($16)&nbsp;<br />
+                  <input type="checkbox" name="sundayBreakfast" value={this.state.saturdayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
+                  <input type="checkbox" name="sundayLunch" value={this.state.sundayLunch} onChange={this.handleChange.bind(this)} />&nbsp;Lunch ($16)&nbsp;<br />
                 <br />
               </section>)}
 
-              <label><strong>Payment Method</strong></label>{requiredField} <br/>
+              <label><strong>Payment Method</strong></label>{requiredField} (Paypal Payment Available Soon)<br/>
               <select name="paymentType" value={this.state.paymentType} onChange={this.handleChange.bind(this)}>
-                <option value="paypal">Paypal or Credit Card</option>
+                {/*<option value="paypal">Paypal or Credit Card</option>*/}
                 <option value="cheque">Cheque</option>
                 <option value="directDeposit">Direct Deposit</option>
               </select><br /><br />
@@ -358,25 +452,7 @@ class RegistrationForm extends Component {
                       <br /><br />
                       <strong>[DRAFT INFORMATION EMAIL TO ALL REGISTRANTS]</strong><br />
                       <br />
-                      SUBJECT: Thank you for Registering for Women&apos;s Weekend Away<br />
 
-                      Hi [NAME],
-
-                      We&apos;re looking forward to ...
-
-
-                      What to Bring
-
-                      Saturday Night Dinner Theme
-
-                      Pray
-
-                      Registrations will be open from 4:30pm and some of us will be there from about 4pm setting up.
-
-                      Looking forward to seeing you at camp.
-
-                      Blessings
-                      Cristiane Baker
 
                       <br /><br />
                       <input type="button" onClick={this.resetRegistrationForm} value="Register Somebody Else?" className="btn btn-primary"/>
