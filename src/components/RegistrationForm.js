@@ -371,14 +371,14 @@ class RegistrationForm extends Component {
 
             <label>
               Dietary Requirements {requiredField} </label><br/>
-                <textarea name="dietary" cols="90" rows="5" onChange={this.handleChange.bind(this)} value={this.state.dietary} />
+                <textarea className="form-control" name="dietary" rows="5" onChange={this.handleChange.bind(this)} value={this.state.dietary} />
                 <br/>
                 <span style={{fontSize: "14px"}}>Please write N/A if none</span>
                 <br/><br/>
 
             <label>
               Other Comments {requiredField}</label><br/>
-              <textarea name="comments" cols="90" rows="5" onChange={this.handleChange.bind(this)} value={this.state.comments} />
+              <textarea className="form-control" name="comments" rows="5" onChange={this.handleChange.bind(this)} value={this.state.comments} />
             <br/>
             <span style={{fontSize: "14px"}}>
               Please answer the following questions and add any other comments that you would like to pass onto the organisers.<br />

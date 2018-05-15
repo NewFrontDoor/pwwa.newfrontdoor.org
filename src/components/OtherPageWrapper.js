@@ -18,9 +18,14 @@ class OtherPageWrapper extends Component {
                 </div>
               </div>
             </div>
+
+            <div className="row">
+              <div className="col-xs-12">
+                <RegistrationForm />
+              </div>
+            </div>
           </div>
         </div>
-        <RegistrationForm />
       </section>
     );
   }
