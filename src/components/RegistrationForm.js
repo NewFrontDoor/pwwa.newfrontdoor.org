@@ -18,6 +18,7 @@ const dayPrice = 20;
 const breakfastCost = 9;
 const lunchCost = 16;
 const dinnerCost = 19
+const registrationsOpen = true;
 
 class RegistrationForm extends Component {
 
@@ -191,7 +192,7 @@ class RegistrationForm extends Component {
 
 
 
-      if(this.state.registrationType === 'full'){
+      if(this.state.registrationType === 'full' || this.state.registrationType === 'earlyBird'){
         form.append("submission[data][10][values][0]", escape(this.state.weekendDinnerAttendance));
         form.append("submission[data][11][values][0]", 'friday');
         form.append("submission[data][11][values][1]", 'saturday');
@@ -228,7 +229,7 @@ class RegistrationForm extends Component {
           form.append("submission[data][11][values]["+i+"0]", 'saturday');
           i++;
         }
-        if(this.state.friday)
+        if(this.state.sunday)
         {
           form.append("submission[data][11][values]["+i+"0]", 'sunday');
           i++;
@@ -265,8 +266,6 @@ class RegistrationForm extends Component {
         }
       }
 
-      //form.append("submission[data][9][values][0]", escape(this.state.meals_required));
-
       form.append("submission[data][13][values][0]", escape(this.state.paymentType));
       form.append("submission[data][14][values][0]", escape(this.state.church));
       form.append("submission[data][15][values][0]", escape(this.state.dietary));
@@ -285,7 +284,6 @@ class RegistrationForm extends Component {
 
     var requiredField = (<span className="form-required" title="This field is required.">*</span>);
     var registrationForm;
-    var registrationsOpen = true;
     if(!this.state.formValid && registrationsOpen){
       registrationForm = (
         <section>
@@ -410,12 +408,12 @@ class RegistrationForm extends Component {
     else if (!this.state.formValid && !registrationsOpen){
       registrationForm = (
         <section>
-        <p>Friday 21st – Sunday 23rd September 2018<br/>
-        Camp Clayton, Ulverston</p>
+          <p>Friday 21st – Sunday 23rd September 2018<br/>
+          Camp Clayton, Ulverston</p>
 
-        <p>Registrations Close 2nd September 2018</p>
+          <p>Registrations Close 2nd September 2018</p>
 
-          <p className="lead">Registrations for Women&apos;s Week Away 2018 have now closed.</p>
+          <h3 style={{color: "#a3c95c"}}>Registrations for Women&apos;s Week Away 2018 have now closed.</h3>
         </section>
     )
     }
