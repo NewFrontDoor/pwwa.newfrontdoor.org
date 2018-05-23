@@ -37,7 +37,7 @@ class RegistrationForm extends Component {
                   formErrorMessage: "",
                   formValid: false,
                   formSubmitted: false,
-                  registrationType: "full",
+                  registrationType: "earlyBird",
                   paymentType: "cheque",
                   totalCost: 0,
                   friday: false,
@@ -69,7 +69,7 @@ class RegistrationForm extends Component {
                   formErrorMessage: "",
                   formValid: false,
                   formSubmitted: false,
-                  registrationType: "full",
+                  registrationType: "earlyBird",
                   paymentType: "cheque",
                   totalCost: 0,
                   friday: false,
@@ -146,7 +146,7 @@ class RegistrationForm extends Component {
     }
     else
     {
-      if(this.state.registrationType !== "full"){
+      if(this.state.registrationType === "day"){
         //sum total cost
         if(this.state.friday){totalCost += dayPrice;}
         if(this.state.saturday){totalCost += dayPrice;}
@@ -161,8 +161,17 @@ class RegistrationForm extends Component {
 
 
       }
+      //Price for full registration if using both options
       else{
-        totalCost = currentFullCost;
+        //not having multiple options: totalCost = currentFullCost;
+        if(this.state.registrationType === "earlyBird")
+        {
+          totalCost = fullWeekendEarlyPrice;
+        }
+        else{
+          totalCost = fullWeekendPrice;
+        }
+
       }
       this.setState({totalCost:totalCost});
       this.setState({formValid:true});
@@ -331,23 +340,21 @@ class RegistrationForm extends Component {
             <label><strong>Registration Type</strong></label>{requiredField}<br/>
 
             <select name="registrationType" value={this.state.registrationType} onChange={this.handleChange.bind(this)}>
-              <option value="full">Full Weekend - ${currentFullCost}</option>
+              <option value="earlyBird">Full Weekend Early Bird - ${fullWeekendEarlyPrice}</option>
+              <option value="full">Full Weekend - ${fullWeekendPrice}</option>
               <option value="day">Day Visitor - ${dayPrice} per day</option>
             </select>
             <br /><br />
 
-              {this.state.registrationType === "full" ? (<section>
+              {this.state.registrationType === "full" || this.state.registrationType === "earlyBird" ? (<section>
                 <strong>Will you be attending the Friday night dinner? </strong><br />
                 <label> Yes &nbsp;</label><input type="radio" name="weekendDinnerAttendance" value="yes" onChange={this.handleChange.bind(this)} checked={this.state.weekendDinnerAttendance === "yes"}/><br />
                 <label> No &nbsp;</label><input type="radio" name="weekendDinnerAttendance" value="no" onChange={this.handleChange.bind(this)} checked={this.state.weekendDinnerAttendance === "no"}/><br />
               </section>) : (
               <section><strong>Please select which days you will be attending:</strong><br />
-                <label><input type="checkbox" name="friday" value={this.state.friday} onChange={this.handleChange.bind(this)} /> &nbsp;Friday </label><br />
                 <label><input type="checkbox" name="saturday" value={this.state.saturday} onChange={this.handleChange.bind(this)} /> &nbsp;Saturday </label><br />
                 <label><input type="checkbox" name="sunday" value={this.state.sunday} onChange={this.handleChange.bind(this)}/> &nbsp;Sunday </label><br />
                 <strong>Please select which meals will be required:</strong><br />
-                <strong>Friday</strong> <br/>
-                  <input type="checkbox" name="fridayDinner" value={this.state.fridayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Dinner ($19)<br />
                 <strong>Saturday</strong><br/>
                   <input type="checkbox" name="saturdayBreakfast" value={this.state.fridayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
                   <input type="checkbox" name="saturdayLunch" value={this.state.saturdayLunch} onChange={this.handleChange.bind(this)}/>&nbsp;Lunch ($16)&nbsp;
@@ -421,38 +428,9 @@ class RegistrationForm extends Component {
     if(this.state.formSubmitted)
     {
       formSubmitted = ( <div>
-                          {this.state.paymentType === "paypal" ? <PaypalConfirmation /> : <ChequeDDConfirmation totalCost={this.state.totalCost} surname={this.state.lastName}/>}
-
-
-                      <strong>[THE PAYMENT EMAIL FOR THE CHEQUE/DD OPTIONS]</strong>
-                      <br />
-                      <br />SUBJECT: Registration and Payment for Women&apos;s Weekend Away
-                      <br />Dear [NAME],
-                      Thank you for registering for the Women&apos;s Weekend Away, hosted by the Presbyterian Church of Tasmania.
-                      Please note that your registration for WWA is not complete until payment has been received.
-                      To complete your registration, please pay the full amount of $[00]
-                      using one of the following methods:
-                      Direct Deposit:
-                      Account Name: Presbyterian Church of Australia
-                      BSB: 067 002
-                      Account No: 28029739
-                      Reference: WWA (Your Surname)
-                      Cheque:
-                      Please make your cheque payable to 'Presbyterian Church of Tasmania' and then post it to:
-                      Katinka Clack
-                      5 Alicia Road
-                      Kingston TAS 7050
-                      For information about the conference, please visit the website here, or follow the updates on  [Links to landing page that NFD set up with brochure info]
-                      If you have any questions, please don&apos;t hesitate to contact me.
-                      Look forward to seeing you there.
-                      God bless,
-                      Cristiane Baker
-                      Camp Coordinator
-                      •	what text would you like in an automated email sent to people when they complete registration?
-                      <br /><br />
-                      <strong>[DRAFT INFORMATION EMAIL TO ALL REGISTRANTS]</strong><br />
-                      <br />
-
+                          {this.state.paymentType === "paypal" ?
+                            <PaypalConfirmation /> :
+                            <ChequeDDConfirmation totalCost={this.state.totalCost} surname={this.state.lastName}/>}
 
                       <br /><br />
                       <input type="button" onClick={this.resetRegistrationForm} value="Register Somebody Else?" className="btn btn-primary"/>
