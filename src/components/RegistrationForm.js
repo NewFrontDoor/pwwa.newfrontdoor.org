@@ -13,12 +13,14 @@ import {postToWebform} from './postToAPI.js';
 
 const fullWeekendEarlyPrice = 130;
 const fullWeekendPrice = 140;
-const currentFullCost = fullWeekendEarlyPrice;
 const dayPrice = 20;
 const breakfastCost = 9;
 const lunchCost = 16;
 const dinnerCost = 19
 const registrationsOpen = true;
+const earlyBirdCutoff = new Date('2018-08-13');
+const earlyBirdValid = earlyBirdCutoff.getTime() > Date.now();
+const currentFullCost = earlyBirdValid ? fullWeekendEarlyPrice : fullWeekendPrice;
 
 class RegistrationForm extends Component {
 
@@ -38,7 +40,7 @@ class RegistrationForm extends Component {
                   formErrorMessage: "",
                   formValid: false,
                   formSubmitted: false,
-                  registrationType: "earlyBird",
+                  registrationType: "full",
                   paymentType: "cheque",
                   totalCost: 0,
                   friday: false,
@@ -49,7 +51,9 @@ class RegistrationForm extends Component {
                   saturdayDinner: false,
                   sundayBreakfast: false,
                   sundayLunch: false,
-                  weekendDinnerAttendance: 'yes'}
+                  weekendDinnerAttendance: 'yes',
+                  donation: 'no',
+                  donationAmount: 0}
 
     this.resetRegistrationForm = this.resetRegistrationForm.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -70,7 +74,7 @@ class RegistrationForm extends Component {
                   formErrorMessage: "",
                   formValid: false,
                   formSubmitted: false,
-                  registrationType: "earlyBird",
+                  registrationType: "full",
                   paymentType: "cheque",
                   totalCost: 0,
                   friday: false,
@@ -81,7 +85,9 @@ class RegistrationForm extends Component {
                   saturdayDinner: false,
                   sundayBreakfast: false,
                   sundayLunch: false,
-                  weekendDinnerAttendance: 'yes'})
+                  weekendDinnerAttendance: 'yes',
+                  donation: 'no',
+                  donationAmount: 0})
   }
 
   handleChange(e) {
@@ -162,18 +168,14 @@ class RegistrationForm extends Component {
 
 
       }
-      //Price for full registration if using both options
       else{
-        //not having multiple options: totalCost = currentFullCost;
-        if(this.state.registrationType === "earlyBird")
-        {
-          totalCost = fullWeekendEarlyPrice;
-        }
-        else{
-          totalCost = fullWeekendPrice;
-        }
-
+          totalCost = currentFullCost;
       }
+      //add donation ammount if applicable
+      if(this.state.donation === 'yes'){
+        totalCost += parseInt(this.state.donationAmount);
+      }
+
       this.setState({totalCost:totalCost});
       this.setState({formValid:true});
       console.log(this.state);
@@ -271,6 +273,10 @@ class RegistrationForm extends Component {
       form.append("submission[data][15][values][0]", escape(this.state.dietary));
       form.append("submission[data][16][values][0]", escape(this.state.comments));
       form.append("submission[data][17][values][0]", totalCost);
+
+      form.append("submission[data][19][values][0]", escape(this.state.donation));
+      form.append("submission[data][20][values][0]", this.state.donationAmount);
+
       var that = this;
       postToWebform(form, function(data){
         that.setState({submissionID:data.sid})
@@ -338,37 +344,52 @@ class RegistrationForm extends Component {
             <label><strong>Registration Type</strong></label>{requiredField}<br/>
 
             <select name="registrationType" value={this.state.registrationType} onChange={this.handleChange.bind(this)}>
-              <option value="earlyBird">Full Weekend Early Bird - ${fullWeekendEarlyPrice}</option>
-              <option value="full">Full Weekend - ${fullWeekendPrice}</option>
+              {earlyBirdCutoff.getTime() > Date.now() ? (<option value="full">(Early Bird) Full Weekend - ${currentFullCost}</option>) : (<option value="full"> Full Weekend - ${currentFullCost}</option>)}
               <option value="day">Day Visitor - ${dayPrice} per day</option>
             </select>
             <br /><br />
 
-              {this.state.registrationType === "full" || this.state.registrationType === "earlyBird" ? (<section>
+
+
+              {this.state.registrationType === "full" ? (<section>
                 <strong>Will you be attending the Friday night dinner? </strong><br />
                 <label> Yes &nbsp;</label><input type="radio" name="weekendDinnerAttendance" value="yes" onChange={this.handleChange.bind(this)} checked={this.state.weekendDinnerAttendance === "yes"}/><br />
                 <label> No &nbsp;</label><input type="radio" name="weekendDinnerAttendance" value="no" onChange={this.handleChange.bind(this)} checked={this.state.weekendDinnerAttendance === "no"}/><br />
               </section>) : (
               <section><strong>Please select which days you will be attending:</strong><br />
+                <label><input type="checkbox" name="friday" value={this.state.friday} onChange={this.handleChange.bind(this)} /> &nbsp;Friday </label><br />
                 <label><input type="checkbox" name="saturday" value={this.state.saturday} onChange={this.handleChange.bind(this)} /> &nbsp;Saturday </label><br />
                 <label><input type="checkbox" name="sunday" value={this.state.sunday} onChange={this.handleChange.bind(this)}/> &nbsp;Sunday </label><br />
                 <strong>Please select which meals will be required:</strong><br />
+                <strong>Friday</strong><br/>
+                  <input type="checkbox" name="fridayDinner" value={this.state.fridayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Dinner ($19)&nbsp;<br/>
                 <strong>Saturday</strong><br/>
-                  <input type="checkbox" name="saturdayBreakfast" value={this.state.fridayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
+                  <input type="checkbox" name="saturdayBreakfast" value={this.state.saturdayBreakfast} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
                   <input type="checkbox" name="saturdayLunch" value={this.state.saturdayLunch} onChange={this.handleChange.bind(this)}/>&nbsp;Lunch ($16)&nbsp;
                   <input type="checkbox" name="saturdayDinner" value={this.state.saturdayDinner} onChange={this.handleChange.bind(this)}/>&nbsp;Dinner ($19)&nbsp;<br />
                 <strong>Sunday</strong><br/>
-                  <input type="checkbox" name="sundayBreakfast" value={this.state.saturdayDinner} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
+                  <input type="checkbox" name="sundayBreakfast" value={this.state.sundayBreakfast} onChange={this.handleChange.bind(this)} />&nbsp;Breakfast ($9)&nbsp;
                   <input type="checkbox" name="sundayLunch" value={this.state.sundayLunch} onChange={this.handleChange.bind(this)} />&nbsp;Lunch ($16)&nbsp;<br />
                 <br />
               </section>)}
+              <br />
+              <strong>Would you like to make a donation towards someone else&apos;s payment?</strong><br />
+              <label> Yes &nbsp;</label><input type="radio" name="donation" value="yes" onChange={this.handleChange.bind(this)} checked={this.state.donation === "yes"}/><br />
+              <label> No &nbsp;</label><input type="radio" name="donation" value="no" onChange={this.handleChange.bind(this)} checked={this.state.donation === "no"}/><br />
+              {this.state.donation === "yes" ? (<section>
+                  <strong>How much would you like to contribute?  &nbsp;</strong>
+                  <input type="number" name="donationAmount" value={this.state.donationAmount} onChange={this.handleChange.bind(this)} /><br /><br />
+                </section>) : (<br/>)}
 
               <label><strong>Payment Method</strong></label>{requiredField} (Paypal Payment Available Soon)<br/>
               <select name="paymentType" value={this.state.paymentType} onChange={this.handleChange.bind(this)}>
                 {/*<option value="paypal">Paypal or Credit Card</option>*/}
                 <option value="cheque">Cheque</option>
                 <option value="directDeposit">Direct Deposit</option>
-              </select><br /><br />
+              </select><br />
+              <em>If you would like to make your payment in installments instead (minimum $50) please contact <a href="mailto:pctas.wwa@gmail.com">pctas.wwa@gmail.com</a> about your registration.</em> <br/><br/>
+
+
 
             <label>Church </label><br/>
             <input className="form-control form-text required" type="text" name="church" size="60" maxLength="128" onChange={this.handleChange.bind(this)} value={this.state.church} />
