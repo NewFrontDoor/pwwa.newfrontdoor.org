@@ -33,6 +33,7 @@ class RegistrationForm extends Component {
                   address: "",
                   suburb: "",
                   state: "",
+                  age: "",
                   postcode: "",
                   church: "",
                   dietary: "",
@@ -67,6 +68,7 @@ class RegistrationForm extends Component {
                   address: "",
                   suburb: "",
                   state: "",
+                  age: "",
                   postcode: "",
                   church: "",
                   dietary: "",
@@ -132,6 +134,10 @@ class RegistrationForm extends Component {
     {
       errorMessage += "Please select your state.\n";
     }
+    if(validator.isEmpty(this.state.age))
+    {
+      errorMessage += "Please select your age range.\n";
+    }
     if(validator.isEmpty(this.state.postcode))
     {
       errorMessage += "Please enter your postcode.\n";
@@ -189,6 +195,8 @@ class RegistrationForm extends Component {
       form.append("submission[data][5][values][0]", escape(this.state.address));
       form.append("submission[data][6][values][0]", escape(this.state.suburb));
       form.append("submission[data][7][values][0]", escape(this.state.state));
+
+      form.append("submission[data][21][values][0]", escape(this.state.age));
       form.append("submission[data][8][values][0]", escape(this.state.postcode));
       form.append("submission[data][9][values][0]", escape(this.state.registrationType));
 
@@ -294,7 +302,7 @@ class RegistrationForm extends Component {
       registrationForm = (
         <section>
           <p>Friday 21st – Sunday 23rd September 2018<br/>
-          Camp Clayton, Ulverston</p>
+          Camp Clayton, Ulverstone</p>
 
           <p>Registrations Close 2nd September 2018</p>
 
@@ -337,7 +345,17 @@ class RegistrationForm extends Component {
             </select><br /><br />
 
             <label>Postcode </label>{requiredField}
-            <input className="form-control form-text" type="text" name="postcode" size="4" maxLength="4" onChange={this.handleChange.bind(this)} value={this.state.postcode} />
+            <input className="form-control form-text" type="text" name="postcode" size="4" maxLength="4" onChange={this.handleChange.bind(this)} value={this.state.postcode} /><br/>
+
+            <label>Age</label>{requiredField}<br/>
+            <select name="age" value={this.state.age} onChange={this.handleChange.bind(this)}>
+            <option value="">----</option>
+              <option value="under18">Under 18</option>
+              <option value="18to24">18-24</option>
+              <option value="25-40  ">25-40</option>
+              <option value="40-60">40-60</option>
+              <option value="over60">60+</option>
+            </select>
 
             <h3 style={{color: "#a3c95c"}}>Registration Information</h3>
 
@@ -430,8 +448,7 @@ class RegistrationForm extends Component {
       registrationForm = (
         <section>
           <p>Friday 21st – Sunday 23rd September 2018<br/>
-          Camp Clayton, Ulverston</p>
-
+          Camp Clayton, Ulverstone</p>
           <p>Registrations Close 2nd September 2018</p>
 
           <h3 style={{color: "#a3c95c"}}>Registrations for Women&apos;s Week Away 2018 have now closed.</h3>
