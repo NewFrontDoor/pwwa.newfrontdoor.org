@@ -11,8 +11,6 @@ class ChequeDD extends Component {
   render() {
     return (
       <section>
-        <br/>
-        <h3>Cheque or Direct Debit after submission </h3>
         <p>Thank you for registering for the 2018 Women&apos;s Weekend Away. <br/><br/>
 
           You will receive a confirmation email with information regarding your payment options, also detailed below. <br/>

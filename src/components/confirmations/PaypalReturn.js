@@ -8,7 +8,7 @@ class PaypalReturn extends Component {
 
         You will receive a confirmation of registration email, containing some of the things you need to know about the upcoming camp. <br/><br/>
 
-        Until then, stay up to date on our Facebook Page (@WWATasmania). We look forward to seeing you soon!</p>
+        Until then, stay up to date on our Facebook Page (<a href="https://www.facebook.com/WWATasmania/">@WWATasmania</a>). We look forward to seeing you soon!</p>
         <br/>
         <a href="/"><input type="button" value="Register Somebody Else?" className="btn btn-primary"/></a>
       </section>
