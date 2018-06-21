@@ -399,7 +399,7 @@ class RegistrationForm extends Component {
                   <input type="number" name="donationAmount" value={this.state.donationAmount} onChange={this.handleChange.bind(this)} /><br /><br />
                 </section>) : (<br/>)}
 
-              <label><strong>Payment Method</strong></label>{requiredField} (Paypal Payment Available Soon)<br/>
+              <label><strong>Payment Method</strong></label>{requiredField}<br/>
               <select name="paymentType" value={this.state.paymentType} onChange={this.handleChange.bind(this)}>
                 <option value="paypal">Paypal or Credit Card</option>
                 <option value="cheque">Cheque</option>
