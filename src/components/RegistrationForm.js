@@ -42,7 +42,7 @@ class RegistrationForm extends Component {
                   formValid: false,
                   formSubmitted: false,
                   registrationType: "full",
-                  paymentType: "cheque",
+                  paymentType: "paypal",
                   totalCost: 0,
                   friday: false,
                   fridayDinner: false,
@@ -77,7 +77,7 @@ class RegistrationForm extends Component {
                   formValid: false,
                   formSubmitted: false,
                   registrationType: "full",
-                  paymentType: "cheque",
+                  paymentType: "paypal",
                   totalCost: 0,
                   friday: false,
                   fridayDinner: false,
@@ -401,7 +401,7 @@ class RegistrationForm extends Component {
 
               <label><strong>Payment Method</strong></label>{requiredField} (Paypal Payment Available Soon)<br/>
               <select name="paymentType" value={this.state.paymentType} onChange={this.handleChange.bind(this)}>
-                {/*<option value="paypal">Paypal or Credit Card</option>*/}
+                <option value="paypal">Paypal or Credit Card</option>
                 <option value="cheque">Cheque</option>
                 <option value="directDeposit">Direct Deposit</option>
               </select><br />
@@ -465,11 +465,11 @@ class RegistrationForm extends Component {
     {
       formSubmitted = ( <div>
                           {this.state.paymentType === "paypal" ?
-                            <PaypalConfirmation /> :
+                            <PaypalConfirmation sid={this.state.submissionID} totalCost={this.state.totalCost} registrationType={this.state.registrationType}/> :
                             <ChequeDDConfirmation totalCost={this.state.totalCost} surname={this.state.lastName}/>}
 
                       <br /><br />
-                      <input type="button" onClick={this.resetRegistrationForm} value="Register Somebody Else?" className="btn btn-primary"/>
+                      {this.state.paymentType !== 'paypal' ? (<input type="button" onClick={this.resetRegistrationForm} value="Register Somebody Else?" className="btn btn-primary"/>) : (<section></section>)}
                       </div>);
     }
     else {

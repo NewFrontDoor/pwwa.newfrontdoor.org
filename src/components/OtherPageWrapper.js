@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Navigation from './Navigation';
 import RegistrationForm from './RegistrationForm';
+import PaypalReturn from './confirmations/PaypalReturn';
+import Error404 from './Error404';
 
 class OtherPageWrapper extends Component {
   render() {
@@ -21,7 +23,12 @@ class OtherPageWrapper extends Component {
 
             <div className="row">
               <div className="col-xs-12">
-                <RegistrationForm />
+                <Switch>
+                    <Route exact path="/paypal_confirmation" component={PaypalReturn} />
+                    <Route exact path="/paypal_confirmation/:nid" component={PaypalReturn} />
+                    <Route exact path="/" component={RegistrationForm} />
+                    <Route path="/*" component={Error404} />
+                </Switch>
               </div>
             </div>
           </div>

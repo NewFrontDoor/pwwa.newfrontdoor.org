@@ -28,7 +28,7 @@ class ChequeDD extends Component {
           Katinka Clack<br/>
           5 Alicia Road<br/>
           Kingston TAS 7050<br/>
-          You will also receive a separate registration email, containing some of the things you need to know about the upcoming camp. <br/>
+          You will also receive a separate registration email, containing some of the things you need to know about the upcoming camp. <br/><br/>
 
           Until then, stay up to date on our Facebook Page (@WWATasmania). We look forward to seeing you soon!<br/>
       </p>
