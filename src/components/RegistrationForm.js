@@ -352,8 +352,8 @@ class RegistrationForm extends Component {
             <option value="">----</option>
               <option value="under18">Under 18</option>
               <option value="18to24">18-24</option>
-              <option value="25-40  ">25-40</option>
-              <option value="40-60">40-60</option>
+              <option value="25to40">25-40</option>
+              <option value="40to60">40-60</option>
               <option value="over60">60+</option>
             </select>
 
