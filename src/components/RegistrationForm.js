@@ -188,16 +188,17 @@ class RegistrationForm extends Component {
       /*handle posting to drupal and show success message*/
       var form = new FormData();
       form.append("webform", "8e070048-9aaf-4371-a0de-35bb5c3d28e6");
-      form.append("submission[data][1][values][0]", escape(this.state.firstName));
-      form.append("submission[data][2][values][0]", escape(this.state.lastName));
-      form.append("submission[data][3][values][0]", escape(this.state.email));
-      form.append("submission[data][4][values][0]", escape(this.state.phone));
-      form.append("submission[data][5][values][0]", escape(this.state.address));
-      form.append("submission[data][6][values][0]", escape(this.state.suburb));
+      //strip 4byte utf8 characters / emojis with .replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, '')
+      form.append("submission[data][1][values][0]", escape(this.state.firstName).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][2][values][0]", escape(this.state.lastName).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][3][values][0]", escape(this.state.email).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][4][values][0]", escape(this.state.phone).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][5][values][0]", escape(this.state.address).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][6][values][0]", escape(this.state.suburb).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
       form.append("submission[data][7][values][0]", escape(this.state.state));
 
       form.append("submission[data][21][values][0]", escape(this.state.age));
-      form.append("submission[data][8][values][0]", escape(this.state.postcode));
+      form.append("submission[data][8][values][0]", escape(this.state.postcode).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
       form.append("submission[data][9][values][0]", escape(this.state.registrationType));
 
 
@@ -277,9 +278,9 @@ class RegistrationForm extends Component {
       }
 
       form.append("submission[data][13][values][0]", escape(this.state.paymentType));
-      form.append("submission[data][14][values][0]", escape(this.state.church));
-      form.append("submission[data][15][values][0]", escape(this.state.dietary));
-      form.append("submission[data][16][values][0]", escape(this.state.comments));
+      form.append("submission[data][14][values][0]", escape(this.state.church).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][15][values][0]", escape(this.state.dietary).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
+      form.append("submission[data][16][values][0]", escape(this.state.comments).replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])/g, ''));
       form.append("submission[data][17][values][0]", totalCost);
 
       form.append("submission[data][19][values][0]", escape(this.state.donation));
