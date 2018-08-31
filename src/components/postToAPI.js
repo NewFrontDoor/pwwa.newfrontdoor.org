@@ -1,5 +1,5 @@
-import fetch from 'isomorphic-fetch';
 import 'es6-promise/auto';
+import fetch from 'isomorphic-fetch';
 
 const DRUPAL_WEBFORM_SUBMISSION = "https://webform.newfrontdoor.org/webform_submission/submission";
 

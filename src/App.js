@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+//polyfills
+import 'core-js/es6/map';
+import 'core-js/es6/set';
+import 'raf/polyfill';
+
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navigation from './components/Navigation';
